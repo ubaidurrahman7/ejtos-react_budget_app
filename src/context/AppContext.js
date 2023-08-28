@@ -69,7 +69,24 @@ export const AppReducer = (state, action) => {
             state.currency = action.payload;
             return {
                 ...state
-            }
+            };
+        case 'DECREASE_EXPENSE':
+                const decreasedExpenses = state.expenses.map((currentExp) => {
+                    if (currentExp.name === action.payload.name) {
+                        const newCost = currentExp.cost - action.payload.amount;
+                        if (newCost >= 0) {
+                            currentExp.cost = newCost;
+                            budget = state.budget + action.payload.amount;
+                        }
+                    }
+                    return currentExp;
+                });
+                action.type = 'DONE';
+                return {
+                    ...state,
+                    expenses: [...decreasedExpenses],
+                    budget,
+                };
 
         default:
             return state;
